@@ -33,10 +33,10 @@
         </el-menu>
       </el-aside>
 
-      <!-- 内容 -->
-      <el-main class="main">
+      <!-- 用户管理 -->
+      <el-main class="main" v-show="user">
         <div class="title">用户管理</div>
-        <el-table :data="tableData" border style="width: 100%">
+        <el-table :data="userData" border style="width: 100%">
           <el-table-column prop="id" label="_id" width="270" header-align="center" align="center"></el-table-column>
           <el-table-column prop="name" label="用户名" width="220" header-align="center" align="center"></el-table-column>
           <el-table-column
@@ -61,6 +61,38 @@
           </el-table-column>
         </el-table>
       </el-main>
+
+      <!-- 订单管理 -->
+      <el-main class="main" v-show="order">
+        <div class="title">订单管理</div>
+        <el-table :data="orderData" border style="width: 100%">
+          <el-table-column prop="id" label="_id" width="270" header-align="center" align="center"></el-table-column>
+          <el-table-column prop="orderNum" label="订单号" width="220" header-align="center" align="center"></el-table-column>
+          <el-table-column prop="name" label="收货人" width="220" header-align="center" align="center"></el-table-column>
+          <el-table-column
+            prop="telNum"
+            label="联系电话"
+            width="220"
+            header-align="center"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="address"
+            label="收货地址"
+            width="220"
+            header-align="center"
+            align="center"
+          ></el-table-column>
+          <el-table-column label="操作" header-align="center" align="center">
+            <template slot-scope="scope">
+              <el-button size="mini">编辑</el-button>
+              <el-button size="mini" type="danger">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-main>
+
+
     </el-container>
   </div>
 </template>
@@ -69,7 +101,9 @@
 export default {
   data() {
     return {
-      tableData: [
+      user: true,
+      order: false,
+      userData: [
         {
           id: "5bd99a8aa655750dd4879b81",
           name: "小仙女是我",
@@ -81,6 +115,15 @@ export default {
           name: "小仙女是我",
           telNum: "15214647650",
           password: "123"
+        }
+      ],
+      orderData: [
+        {
+          id: "5bd99a8aa655750dd4879b81",
+          name: "小仙女是我",
+          orderNum: "1547006475008",
+          telNum: "15214647650",
+          address: "123"
         }
       ]
     };
