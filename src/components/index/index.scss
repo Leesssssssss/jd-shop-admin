@@ -37,4 +37,12 @@
     font-size: 18px;
     margin-bottom: 10px;
   }
+  .table-expand {
+    font-size: 0;
+  }
+  .table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
 }
