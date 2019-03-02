@@ -36,11 +36,7 @@
       <!-- 用户管理 -->
       <el-main class="main" v-show="user">
         <div class="title">用户管理</div>
-        <el-table
-          :data="userData"
-          style="width: 100%"
-          :header-cell-style="{'font-weight':700}"
-        >
+        <el-table :data="userData" style="width: 100%" :header-cell-style="{'font-weight':700}">
           <el-table-column prop="_id" label="_id" width="270" header-align="center" align="center"></el-table-column>
           <el-table-column
             prop="userName"
@@ -126,12 +122,11 @@
 
       <!-- 商品管理 -->
       <el-main class="main" v-show="good">
-        <div class="title">商品管理</div>
-        <el-table
-          :data="goodData"
-          style="width: 100%"
-          :header-cell-style="{'font-weight':700}"
-        >
+        <div class="addGood">
+          <div class="title">商品管理</div>
+          <el-button type="primary" class="btn" @click="addGoods">+ 添加商品</el-button>
+        </div>
+        <el-table :data="goodData" style="width: 100%" :header-cell-style="{'font-weight':700}">
           <el-table-column prop="_id" label="_id" width="270" header-align="center" align="center"></el-table-column>
           <el-table-column
             prop="userName"
@@ -162,6 +157,51 @@
           </el-table-column>
         </el-table>
       </el-main>
+
+      <!-- 添加商品 -->
+      <el-main class="main" v-show="addGood">
+        <div class="title">添加商品</div>
+        <el-form
+          :model="ruleForm"
+          :rules="rules"
+          ref="ruleForm"
+          label-width="100px"
+          class="demo-ruleForm"
+        >
+          <el-form-item label="商品名称" prop="name">
+            <el-input v-model="ruleForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="商品售价" prop="price">
+            <el-input v-model="ruleForm.price"></el-input>
+          </el-form-item>
+          <el-form-item label="商品原价" prop="rePrice">
+            <el-input v-model="ruleForm.rePrice"></el-input>
+          </el-form-item>
+          <el-form-item label="商品分类" prop="region">
+            <el-select v-model="ruleForm.region" placeholder="请选择商品分类">
+              <el-option label="分类一" value="shanghai"></el-option>
+              <el-option label="分类二" value="beijing"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-upload
+              action="https://jsonplaceholder.typicode.com/posts/"
+              list-type="picture-card"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+            >
+              <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog :visible.sync="dialogVisible">
+              <img width="100%" :src="dialogImageUrl" alt>
+            </el-dialog>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-main>
     </el-container>
   </div>
 </template>
@@ -174,9 +214,35 @@ export default {
       user: true,
       order: false,
       good: false,
+      addGood: false,
       userData: [],
       orderData: [],
-      goodData: []
+      goodData: [],
+      dialogImageUrl: "",
+      dialogVisible: false,
+      ruleForm: {
+        name: "",
+        region: "",
+        price: "",
+        rePrice: ""
+      },
+      rules: {
+        name: [
+          { required: true, message: "请输入商品名称", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ],
+        price: [
+          { required: true, message: "请输入商品售价", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ],
+        rePrice: [
+          { required: true, message: "请输入商品原价", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ],
+        region: [
+          { required: true, message: "请选择商品分类", trigger: "change" }
+        ]
+      }
     };
   },
   created() {
@@ -205,6 +271,30 @@ export default {
         this.order = false;
         this.good = true;
       }
+    },
+    addGoods() {
+      this.addGood = true;
+      this.good = false;
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     }
   }
 };
